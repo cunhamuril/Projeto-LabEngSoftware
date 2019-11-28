@@ -1,0 +1,1 @@
+include 'android', 'core', ':gdx-sqlite-android', ':gdx-sqlite'
