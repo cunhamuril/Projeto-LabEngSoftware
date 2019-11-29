@@ -16,13 +16,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import java.sql.Connection;
 
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
-public interface ActionResolver { public Connection getConnection(); }
 
 public class FlappyBird extends ApplicationAdapter {
     private SpriteBatch batch;
@@ -151,8 +148,32 @@ public class FlappyBird extends ApplicationAdapter {
 
             if (estadoJogo == 1) {
                 toqueSom = true;
+
                 // movimentação dos canos
-                posicaoMovimentoCanoHorizontal -= deltaTime * 400;
+                int aceleracao = 350;
+
+                if (pontuacao >= 5) {
+                    aceleracao = 400;
+                } else if (pontuacao >= 10) {
+                    aceleracao = 450;
+                } else if (pontuacao >= 15) {
+                    aceleracao = 500;
+                } else if (pontuacao >= 20) {
+                    aceleracao = 550;
+                } else if (pontuacao >= 25) {
+                    aceleracao = 600;
+                } else if (pontuacao >= 30) {
+                    aceleracao = 650;
+                } else if (pontuacao >= 35) {
+                    aceleracao = 700;
+                } else if (pontuacao >= 40) {
+                    aceleracao = 750;
+                }
+                /**
+                 *
+                 */
+
+                posicaoMovimentoCanoHorizontal -= deltaTime * aceleracao;
 
                 // condição que verifica se a tela foi tocada
                 if (Gdx.input.justTouched()) {
@@ -218,6 +239,7 @@ public class FlappyBird extends ApplicationAdapter {
                 posicaoMovimentoCanoHorizontal,
                 alturaDispositivo / 2 - canoBaixo.getHeight() - espacoEntreCanos / 2 + alturaEntreCanosRandomica
         );
+//        batch.draw(passaro[(int) variacao], 120, posicaoInicialVertical);
         batch.draw(passaro[(int) variacao], 120, posicaoInicialVertical, 100, 75);
         fonte.draw(batch, String.valueOf(pontuacao), larguraDispositivo / 2, alturaDispositivo - 50);
 
