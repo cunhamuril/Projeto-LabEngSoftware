@@ -50,6 +50,7 @@ public class FlappyBird extends ApplicationAdapter {
     private int record = 0;
     private int pontuacao = 0;
     private int estadoJogo = 0; // 0 -> jogo não iniciado | 1 -> jogo iniciado | 2 -> Tela game over
+    private int aceleracaoCanos = 350;
 
     private float larguraDispositivo;
     private float alturaDispositivo;
@@ -64,6 +65,7 @@ public class FlappyBird extends ApplicationAdapter {
 
     private boolean marcouPonto;
     private boolean toqueSom;
+    private boolean podeAcelerar;
 
     // camera
     private OrthographicCamera camera;
@@ -150,30 +152,19 @@ public class FlappyBird extends ApplicationAdapter {
                 toqueSom = true;
 
                 // movimentação dos canos
-                int aceleracao = 350;
-
-                if (pontuacao >= 5) {
-                    aceleracao = 400;
-                } else if (pontuacao >= 10) {
-                    aceleracao = 450;
-                } else if (pontuacao >= 15) {
-                    aceleracao = 500;
-                } else if (pontuacao >= 20) {
-                    aceleracao = 550;
-                } else if (pontuacao >= 25) {
-                    aceleracao = 600;
-                } else if (pontuacao >= 30) {
-                    aceleracao = 650;
-                } else if (pontuacao >= 35) {
-                    aceleracao = 700;
-                } else if (pontuacao >= 40) {
-                    aceleracao = 750;
-                }
+                /**
+                 * cada vez que a pontuação for um número múltiplo de 3, aumenta +25 na aceleração dos canos
+                 * podeAcelerar controla para que não aumente infinitamente enquanto for múltiplo de 3
+                 */
+               if (pontuacao % 3 == 0 && pontuacao != 0 && podeAcelerar) {
+                   aceleracaoCanos += 25;
+                   podeAcelerar = false;
+               }
                 /**
                  *
                  */
 
-                posicaoMovimentoCanoHorizontal -= deltaTime * aceleracao;
+                posicaoMovimentoCanoHorizontal -= deltaTime * aceleracaoCanos;
 
                 // condição que verifica se a tela foi tocada
                 if (Gdx.input.justTouched()) {
@@ -193,6 +184,7 @@ public class FlappyBird extends ApplicationAdapter {
                     if (!marcouPonto) {
                         pontuacao++;
                         marcouPonto = true;
+                        podeAcelerar = true;
                         sfxPoint.play();
                     }
                 }
@@ -205,6 +197,7 @@ public class FlappyBird extends ApplicationAdapter {
                     }
 
                     // Ao reniciar...
+                    aceleracaoCanos = 350;
                     marcouPonto = false;
                     estadoJogo = 0;
                     pontuacao = 0;
